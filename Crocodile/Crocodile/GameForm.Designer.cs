@@ -49,7 +49,7 @@
             btnAnimals.Name = "btnAnimals";
             btnAnimals.Size = new Size(113, 30);
             btnAnimals.TabIndex = 1;
-            btnAnimals.Text = "Животные";
+            btnAnimals.Text = "Природа";
             btnAnimals.UseVisualStyleBackColor = true;
             btnAnimals.Click += btnAnimals_Click;
             // 
@@ -59,7 +59,7 @@
             btnNature.Name = "btnNature";
             btnNature.Size = new Size(113, 30);
             btnNature.TabIndex = 2;
-            btnNature.Text = "Природа";
+            btnNature.Text = "Животные";
             btnNature.UseVisualStyleBackColor = true;
             btnNature.Click += btnNature_Click;
             // 

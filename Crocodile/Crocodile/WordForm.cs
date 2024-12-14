@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Crocodile
 {
+    public delegate void GameFinishedHandler(List<string> guessedWords, List<string> notGuessedWords);
+
     public partial class WordForm : Form
     {
         private string currentWord;
         private string category;
         private System.Windows.Forms.Timer countdownTimer;
         private int timeLeft;
+        private string playerName;
+        public event GameFinishedHandler GameFinished;
+
+        public static List<string> guessedWords = new List<string>();
+        public static List<string> notGuessedWords = new List<string>();
 
         private static Dictionary<string, List<string>> words = new Dictionary<string, List<string>>()
         {
@@ -38,15 +40,11 @@ namespace Crocodile
             "Тропический остров", "Пастбище", "Рифтовая долина", "Залив", "Кипарисовая роща"}}
         };
 
-        public static List<string> guessedWords = new List<string>();
-        public static List<string> notGuessedWords = new List<string>();
-
-        public WordForm(string category)
+        public WordForm(string category, string playerName)
         {
             InitializeComponent();
             this.BackColor = System.Drawing.ColorTranslator.FromHtml("#212121");
 
-            // Настройки для кнопок
             btnGuessed.BackColor = System.Drawing.ColorTranslator.FromHtml("#424242");
             btnGuessed.ForeColor = System.Drawing.Color.White;
             btnGuessed.FlatStyle = FlatStyle.Flat;
@@ -57,7 +55,6 @@ namespace Crocodile
             btnNotGuessed.FlatStyle = FlatStyle.Flat;
             btnNotGuessed.Font = new Font("Arial", 10, FontStyle.Bold);
 
-            // Настройки для меток
             lblWord.ForeColor = System.Drawing.Color.White;
             lblTime.ForeColor = System.Drawing.Color.White;
             lblWord.BackColor = System.Drawing.Color.Transparent;
@@ -65,21 +62,11 @@ namespace Crocodile
             lblWord.Font = new Font("Segoe UI", 14, FontStyle.Bold);
             lblTime.Font = new Font("Segoe UI", 12, FontStyle.Regular);
 
-            // Инициализация оставшихся параметров
             this.category = category;
+            this.playerName = playerName;
             timeLeft = SettingsForm.GameTime;
             countdownTimer = new System.Windows.Forms.Timer();
             countdownTimer.Interval = 1000;
-            countdownTimer.Tick += CountdownTimer_Tick;
-            countdownTimer.Start();
-
-            ShowRandomWord();
-            UpdateTimeLabel();
-            this.category = category;
-
-            timeLeft = SettingsForm.GameTime; // Время берётся из настроек
-            countdownTimer = new System.Windows.Forms.Timer();
-            countdownTimer.Interval = 1000; // Интервал 1 секунда
             countdownTimer.Tick += CountdownTimer_Tick;
             countdownTimer.Start();
 
@@ -106,9 +93,19 @@ namespace Crocodile
             if (timeLeft <= 0)
             {
                 countdownTimer.Stop();
-                MessageBox.Show("Время вышло! Слово добавлено в неугаданные.", "Время истекло", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                notGuessedWords.Add(currentWord);
+                CloseWordForm();
             }
+        }
+
+        private void CloseWordForm()
+        {
+            GameFinished?.Invoke(new List<string>(guessedWords), new List<string>(notGuessedWords));
+
+            guessedWords.Clear();
+            notGuessedWords.Clear();
+
+            this.Close();
         }
 
         private void UpdateTimeLabel()
@@ -120,15 +117,9 @@ namespace Crocodile
         {
             if (!string.IsNullOrEmpty(currentWord))
             {
-                
                 guessedWords.Add(currentWord);
                 ShowRandomWord();
             }
-        }
-
-        private void WordForm_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void btnNotGuessed_Click(object sender, EventArgs e)
@@ -138,6 +129,11 @@ namespace Crocodile
                 notGuessedWords.Add(currentWord);
                 ShowRandomWord();
             }
+        }
+
+        private void WordForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

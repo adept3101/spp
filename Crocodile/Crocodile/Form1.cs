@@ -2,12 +2,16 @@ namespace Crocodile
 {
     public partial class Form1 : Form
     {
+        private ResultsForm resultsForm;
+
         public Form1()
         {
             InitializeComponent();
-            this.BackColor = System.Drawing.ColorTranslator.FromHtml("#212121");
+            resultsForm = new ResultsForm();
 
-            // Настройки для кнопок
+            this.BackColor = System.Drawing.ColorTranslator.FromHtml("#212121");
+            resultsForm = new ResultsForm();
+
             btnPlay.BackColor = System.Drawing.ColorTranslator.FromHtml("#424242");
             btnPlay.ForeColor = System.Drawing.Color.White;
             btnPlay.FlatStyle = FlatStyle.Flat;
@@ -23,8 +27,6 @@ namespace Crocodile
             btnResults.FlatStyle = FlatStyle.Flat;
             btnResults.Font = new Font("Arial", 10, FontStyle.Bold);
 
-            // Настройки для меток
-           
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -34,8 +36,14 @@ namespace Crocodile
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            GameForm gameForm = new GameForm();
-            gameForm.ShowDialog();
+            EnterNameForm enterNameForm = new EnterNameForm();
+            if (enterNameForm.ShowDialog() == DialogResult.OK)
+            {
+                string playerName = enterNameForm.PlayerName;
+
+                GameForm gameForm = new GameForm(playerName, resultsForm);
+                gameForm.ShowDialog();
+            }
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -46,7 +54,6 @@ namespace Crocodile
 
         private void btnResults_Click(object sender, EventArgs e)
         {
-            ResultsForm resultsForm = new ResultsForm();
             resultsForm.ShowDialog();
         }
     }

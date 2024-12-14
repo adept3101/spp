@@ -33,6 +33,7 @@
             btnClearResults = new Button();
             lblGuessedWords = new Label();
             lblNotGuessedWords = new Label();
+            listBox1 = new ListBox();
             SuspendLayout();
             // 
             // lstGuessedWords
@@ -81,11 +82,22 @@
             lblNotGuessedWords.TabIndex = 4;
             lblNotGuessedWords.Text = "Не угадано";
             // 
+            // listBox1
+            // 
+            listBox1.FormattingEnabled = true;
+            listBox1.ItemHeight = 15;
+            listBox1.Location = new Point(668, 12);
+            listBox1.Name = "listBox1";
+            listBox1.Size = new Size(120, 94);
+            listBox1.TabIndex = 5;
+            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+            // 
             // ResultsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(listBox1);
             Controls.Add(lblNotGuessedWords);
             Controls.Add(lblGuessedWords);
             Controls.Add(btnClearResults);
@@ -105,5 +117,6 @@
         private Button btnClearResults;
         private Label lblGuessedWords;
         private Label lblNotGuessedWords;
+        private ListBox listBox1;
     }
 }
